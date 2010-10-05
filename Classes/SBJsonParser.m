@@ -297,13 +297,9 @@ static char ctrl[0x22];
     do {
         // First see if there's a portion we can grab in one go. 
         // Doing this caused a massive speedup on the long string.
-        len = strcspn(c, ctrl);
+		len = strcspn(c, ctrl);
         if (len) {
-            // check for 
-            id t = [[NSString alloc] initWithBytesNoCopy:(char*)c
-                                                  length:len
-                                                encoding:NSUTF8StringEncoding
-                                            freeWhenDone:NO];
+			id t = [[NSString alloc] initWithBytes:c length:len encoding:NSUTF8StringEncoding];
             if (t) {
                 [*o appendString:t];
                 [t release];
@@ -492,11 +488,8 @@ static char ctrl[0x22];
     } else {
         // jumped to by simple branch, if an overflow occured
         longlong_overflow:;
-        
-        id str = [[NSString alloc] initWithBytesNoCopy:(char*)ns
-                                                length:c - ns
-                                              encoding:NSUTF8StringEncoding
-                                          freeWhenDone:NO];
+
+		id str = [[NSString alloc] initWithBytes:(char*)ns length:c - ns encoding:NSUTF8StringEncoding];
         [str autorelease];
         if (str && (*o = [NSDecimalNumber decimalNumberWithString:str]))
             return YES;
